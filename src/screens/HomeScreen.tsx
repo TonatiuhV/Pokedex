@@ -2,7 +2,7 @@ import React from 'react';
 import {ActivityIndicator, Image, Text, View} from 'react-native';
 import {FlatList} from 'react-native-gesture-handler';
 import {useSafeAreaInsets} from 'react-native-safe-area-context';
-import {FadeInImage} from '../components/FadeInImage';
+import {PokemonCard} from '../components/PokemonCard';
 import {usePokemonPaginated} from '../hooks/usePokemonPaginated';
 import {appStyle} from '../theme/appTheme';
 
@@ -17,25 +17,34 @@ export const HomeScreen = () => {
         source={require('../assets/pokebola.png')}
         style={appStyle.pokebolaBG}
       />
-      <FlatList
-        data={simplePokemonList}
-        keyExtractor={pokemon => pokemon.id}
-        renderItem={({item}) => (
-          <FadeInImage
-            uri={item.picture}
-            style={{
-              height: 100,
-              width: 100,
-            }}
-          />
-        )}
-        //Infinite Scroll
-        onEndReached={loadPokemons}
-        onEndReachedThreshold={0.4}
-        ListFooterComponent={
-          <ActivityIndicator style={{height: 100}} size={20} color="grey" />
-        }
-      />
+      <View style={{alignItems: 'center'}}>
+        <FlatList
+          showsVerticalScrollIndicator={false}
+          data={simplePokemonList}
+          numColumns={2}
+          ListHeaderComponent={
+            <Text
+              style={[
+                appStyle.title,
+                appStyle.globalMargin,
+                {
+                  top: top + 20,
+                  marginBottom: top + 30,
+                },
+              ]}>
+              Pokedex
+            </Text>
+          }
+          keyExtractor={pokemon => pokemon.id}
+          renderItem={({item}) => <PokemonCard pokemon={item} />}
+          //Infinite Scroll
+          onEndReached={loadPokemons}
+          onEndReachedThreshold={0.4}
+          ListFooterComponent={
+            <ActivityIndicator style={{height: 100}} size={20} color="grey" />
+          }
+        />
+      </View>
     </>
   );
 };
