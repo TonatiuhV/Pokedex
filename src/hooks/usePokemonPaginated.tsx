@@ -38,4 +38,10 @@ export const usePokemonPaginated = () => {
   useEffect(() => {
     loadPokemons();
   }, []);
+  return {
+    simplePokemonList,
+    isLoading,
+    loadPokemons,
+    nextPageUrl,
+  };
 };
