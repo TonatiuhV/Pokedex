@@ -7,6 +7,7 @@ import {
   Dimensions,
   Image,
 } from 'react-native';
+import {CompositeNavigationProp, useNavigation} from '@react-navigation/native';
 
 import ImageColors from 'react-native-image-colors';
 
@@ -21,6 +22,16 @@ const windowWidth = Dimensions.get('window').width;
 export const PokemonCard = ({pokemon}: Props) => {
   const [bgColor, setBgColor] = useState('grey');
   const isMounted = useRef(true);
+  const navigation = useNavigation();
+  const showPokemon = () => {
+    navigation.navigate(
+      'PokemonScreen' as never,
+      {
+        simplePokemon: pokemon,
+        color: bgColor,
+      } as never,
+    );
+  };
 
   useEffect(() => {
     //IOS backgroungcolor
@@ -52,7 +63,7 @@ export const PokemonCard = ({pokemon}: Props) => {
   }, []);
 
   return (
-    <TouchableOpacity activeOpacity={0.9}>
+    <TouchableOpacity activeOpacity={0.9} onPress={showPokemon}>
       <View
         style={{
           ...styles.cardContainer,
