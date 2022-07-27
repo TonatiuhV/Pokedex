@@ -8,9 +8,7 @@ import {
 
 export const usePokemonSearch = () => {
   const [isFeching, setIsFeching] = useState(true);
-  const [simplePokemonList, setSimplePokemonList] = useState<SimplePokemon[]>(
-    [],
-  );
+  const simplePokemonList = useRef<SimplePokemon[]>([]);
   const loadPokemons = async () => {
     const resp = await pokemonApi.get<PokemonPaginatedResponse>(
       'https://pokeapi.co/api/v2/pokemon?limit=1200',
@@ -29,7 +27,7 @@ export const usePokemonSearch = () => {
       return {id, name, picture};
     });
     //para acumular los anteriores y los nuevos
-    setSimplePokemonList(newPokeonList);
+    simplePokemonList.current = newPokeonList;
   };
 
   useEffect(() => {
