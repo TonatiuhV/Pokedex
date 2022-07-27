@@ -1,4 +1,4 @@
-import React, {useEffect} from 'react';
+import React, {useEffect, useState} from 'react';
 import {
   StyleSheet,
   Text,
@@ -20,10 +20,12 @@ interface Props extends StackScreenProps<RootStackParams, 'PokemonScreen'> {}
 
 export const PokemonScreen = ({route, navigation}: Props) => {
   const {simplePokemon, color} = route.params;
-  const {id, name, picture} = simplePokemon;
+  const {id, name} = simplePokemon;
+  //Cambia la imagen principal por el sprite
+  const [picture, setPicture] = useState(simplePokemon.picture);
   const {top} = useSafeAreaInsets();
-
   const {isLoading, pokemon} = usePokemon(id);
+
   return (
     <View style={{flex: 1}}>
       {/* Header Container */}
@@ -44,7 +46,12 @@ export const PokemonScreen = ({route, navigation}: Props) => {
           source={require('../assets/pokebola-blanca.png')}
           style={styles.pokeball}
         />
-        <FadeInImage uri={picture} style={styles.pokemonImage} />
+        <TouchableOpacity
+          activeOpacity={0.8}
+          style={styles.imageButton}
+          onPress={() => setPicture(simplePokemon.picture)}>
+          <FadeInImage uri={picture} style={styles.pokemonImage} />
+        </TouchableOpacity>
       </View>
 
       {/* Details Pokemon */}
@@ -53,7 +60,10 @@ export const PokemonScreen = ({route, navigation}: Props) => {
           <ActivityIndicator color={color} size={50} />
         </View>
       ) : (
-        <PokemonDetails pokemon={pokemon} />
+        <PokemonDetails
+          pokemon={pokemon}
+          onChangePicture={uri => setPicture(uri)}
+        />
       )}
     </View>
   );
@@ -83,11 +93,13 @@ const styles = StyleSheet.create({
     bottom: -20,
     opacity: 0.7,
   },
+  imageButton: {
+    position: 'absolute',
+    bottom: -15,
+  },
   pokemonImage: {
     width: 250,
     height: 250,
-    position: 'absolute',
-    bottom: -15,
   },
   loadingIndicator: {
     flex: 1,

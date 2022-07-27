@@ -1,22 +1,40 @@
 import React, {useEffect, useState} from 'react';
 import {StyleSheet, Text, View, ScrollView, FlatList} from 'react-native';
-import {PokemonFull} from '../interfaces/pokemonInterfaces';
+import {PokemonFull, Sprites} from '../interfaces/pokemonInterfaces';
 import {FadeInImage} from './FadeInImage';
+import {PokemonSprite} from './PokemonSprite';
 
 interface Props {
   pokemon: PokemonFull;
+  onChangePicture: (uri: string) => void;
 }
-export const PokemonDetails = ({pokemon}: Props) => {
+export const PokemonDetails = ({pokemon, onChangePicture}: Props) => {
   const [sprites, setSprites] = useState<string[]>([]);
 
   const tranformSprites = () => {
-    let sprite;
-    let uriSprites = [];
-    for (sprite in pokemon.sprites) {
-      uriSprites.push(sprite);
-    }
-    setSprites(uriSprites);
+    //unicamnte obtenemos los atributes que pueden contener una imagen
+    let spritesAttributes: string[] = [
+      'front_default',
+      'back_default',
+      'front_shiny',
+      'back_shiny',
+      'front_female',
+      'back_female',
+      'back_shiny_female',
+      'front_shiny_female',
+    ];
+    let spritesUri: string[] = [];
+    spritesAttributes.forEach(spr => {
+      if (
+        pokemon.sprites[spr as keyof Sprites] != undefined &&
+        pokemon.sprites[spr as keyof Sprites] != null
+      ) {
+        spritesUri.push(pokemon.sprites[spr as keyof Sprites] as any);
+      }
+    });
+    setSprites(spritesUri);
   };
+
   useEffect(() => {
     tranformSprites();
   }, []);
@@ -52,22 +70,15 @@ export const PokemonDetails = ({pokemon}: Props) => {
         <Text style={styles.title}>Sprites</Text>
         {/* No es necesario usar un FlatList */}
         <ScrollView horizontal showsHorizontalScrollIndicator={false}>
-          <FadeInImage
-            uri={pokemon.sprites.front_default}
-            style={styles.basicSprite}
-          />
-          <FadeInImage
-            uri={pokemon.sprites.back_default}
-            style={styles.basicSprite}
-          />
-          <FadeInImage
-            uri={pokemon.sprites.front_shiny}
-            style={styles.basicSprite}
-          />
-          <FadeInImage
-            uri={pokemon.sprites.back_shiny}
-            style={styles.basicSprite}
-          />
+          {sprites.map((uriSprite, index) => {
+            return (
+              <PokemonSprite
+                key={uriSprite}
+                uriSprite={uriSprite}
+                onPress={onChangePicture}
+              />
+            );
+          })}
         </ScrollView>
       </View>
       {/* Habilidades */}
