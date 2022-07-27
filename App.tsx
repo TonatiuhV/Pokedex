@@ -3,6 +3,7 @@ import React from 'react';
 import {StatusBar, Text, View} from 'react-native';
 import {NavigationContainer} from '@react-navigation/native';
 import {NavigatorStack} from './src/navigator/NavigatorStack';
+import {Tabs} from './src/navigator/Tabs';
 
 const App = () => {
   return (
@@ -12,7 +13,8 @@ const App = () => {
         barStyle="dark-content"
         translucent
       />
-      <NavigatorStack />
+      {/* <NavigatorStack /> */}
+      <Tabs />
     </NavigationContainer>
   );
 };
